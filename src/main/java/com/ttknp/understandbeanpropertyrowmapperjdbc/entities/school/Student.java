@@ -1,13 +1,11 @@
 package com.ttknp.understandbeanpropertyrowmapperjdbc.entities.school;
 
-import org.springframework.data.relational.core.mapping.Table;
-
 import java.util.Date;
 
 
 // @Table(name = "STUDENTS",schema = "TTKNP_SCHOOL")
 public class Student {
-    private Long id;
+    private Long sid;
     private String fullName;
     private Date birthday;
     private String level;
@@ -15,19 +13,19 @@ public class Student {
     public Student() {
     }
 
-    public Student(Long id, String fullName, Date birthday, String level) {
-        this.id = id;
+    public Student(Long sid, String fullName, Date birthday, String level) {
+        this.sid = sid;
         this.fullName = fullName;
         this.birthday = birthday;
         this.level = level;
     }
 
-    public Long getId() {
-        return id;
+    public Long getSid() {
+        return sid;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setSid(Long sid) {
+        this.sid = sid;
     }
 
     public String getFullName() {
@@ -57,7 +55,7 @@ public class Student {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Student{");
-        sb.append("id=").append(id);
+        sb.append("id=").append(sid);
         sb.append(", fullName='").append(fullName).append('\'');
         sb.append(", birthday=").append(birthday);
         sb.append(", level=").append(level);
