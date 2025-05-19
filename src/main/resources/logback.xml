@@ -10,7 +10,13 @@
     </appender>
 
     <root>
-        <level value="INFO" />
+        <!--
+            2 config for logging level by logback
+            1 . application.properties
+            2 . <level value="<Level>,..." />
+            don't forget specify more level if you want
+        -->
+        <level value="INFO,DEBUG" />
         <appender-ref ref="consoleAppender" />
     </root>
 </configuration>

@@ -2,30 +2,28 @@ package com.ttknp.understandbeanpropertyrowmapperjdbc.entities.school;
 
 import java.util.Date;
 
-
-// @Table(name = "STUDENTS",schema = "TTKNP_SCHOOL") No need if you don't use @Repository on CrudRepository
-public class Student {
-    private Long sid;
+public class Teacher {
+    private Long tid;
     private String fullName;
     private Date birthday;
-    private String level;
+    private String classId;
 
-    public Student() {
-    }
-
-    public Student(Long sid, String fullName, Date birthday, String level) {
-        this.sid = sid;
+    public Teacher(Long tid, String fullName, Date birthday, String classId) {
+        this.tid = tid;
         this.fullName = fullName;
         this.birthday = birthday;
-        this.level = level;
+        this.classId = classId;
     }
 
-    public Long getSid() {
-        return sid;
+    public Teacher() {
     }
 
-    public void setSid(Long sid) {
-        this.sid = sid;
+    public Long getTid() {
+        return tid;
+    }
+
+    public void setTid(Long tid) {
+        this.tid = tid;
     }
 
     public String getFullName() {
@@ -44,21 +42,20 @@ public class Student {
         this.birthday = birthday;
     }
 
-    public String getLevel() {
-        return level;
+    public String getClassId() {
+        return classId;
     }
 
-    public void setLevel(String level) {
-        this.level = level;
+    public void setClassId(String classId) {
+        this.classId = classId;
     }
-
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Student{");
-        sb.append("sid=").append(sid);
+        final StringBuilder sb = new StringBuilder("Teacher{");
+        sb.append("tid=").append(tid);
         sb.append(", fullName='").append(fullName).append('\'');
         sb.append(", birthday=").append(birthday);
-        sb.append(", level=").append(level);
+        sb.append(", classId=").append(classId);
         sb.append('}');
         return sb.toString();
     }
