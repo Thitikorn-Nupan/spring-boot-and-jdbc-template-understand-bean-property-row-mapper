@@ -28,15 +28,15 @@ public class StudentService {
     }
 
     public List<String> findAllFullName() {
-        return jdbcExecuteSQLHelper.selectAllMapPropByRowMapper(Commands.STUDENT_SELECT_ALL_ONLY_FULL_NAME,String.class);
+        return jdbcExecuteSQLHelper.selectAllOnlyColumnMapPropByRowMapper(Commands.STUDENT_SELECT_ALL_ONLY_FULL_NAME,String.class);
     }
 
     public List<Long> findAllSid() {
-        return jdbcExecuteSQLHelper.selectAllMapPropByRowMapper(Commands.STUDENT_SELECT_ALL_ONLY_SID,Long.class);
+        return jdbcExecuteSQLHelper.selectAllOnlyColumnMapPropByRowMapper(Commands.STUDENT_SELECT_ALL_ONLY_SID,Long.class);
     }
 
     public List<Map<String,Object>> findAll(String ...whateverParamsIJustWantTheSameMethodNameAsFindAll) {
-        return jdbcExecuteSQLHelper.selectAllMapPropByRowMapper(Commands.STUDENT_SELECT_ALL);
+        return jdbcExecuteSQLHelper.selectAllOnlyColumnMapPropByRowMapper(Commands.STUDENT_SELECT_ALL);
     }
 
     public Student findByPrimaryKey(Long id) {

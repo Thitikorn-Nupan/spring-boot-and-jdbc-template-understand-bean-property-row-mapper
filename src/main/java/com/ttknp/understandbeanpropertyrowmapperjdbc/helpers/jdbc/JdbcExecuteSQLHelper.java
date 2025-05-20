@@ -1,10 +1,12 @@
 package com.ttknp.understandbeanpropertyrowmapperjdbc.helpers.jdbc;
 
-import com.ttknp.understandbeanpropertyrowmapperjdbc.entities.school.Student;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Service;
 
 import java.sql.ResultSet;
@@ -17,6 +19,7 @@ import java.util.Map;
 @Service
 public class JdbcExecuteSQLHelper {
 
+    private static final Logger log = LoggerFactory.getLogger(JdbcExecuteSQLHelper.class);
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -33,12 +36,12 @@ public class JdbcExecuteSQLHelper {
     }
 
     // jdbcTemplate.queryForList, it works for rows, but not recommend, the mapping in Map may not same as the object, need casting.
-    public List<Map<String, Object>> selectAllMapPropByRowMapper(String sql) {
+    public List<Map<String, Object>> selectAllOnlyColumnMapPropByRowMapper(String sql) {
         return jdbcTemplate.queryForList(sql);
     }
 
     // U can be only String , Integer , ... anything but should not be Object
-    public <U> List<U> selectAllMapPropByRowMapper(String sql, Class<U> aClass) {
+    public <U> List<U> selectAllOnlyColumnMapPropByRowMapper(String sql, Class<U> aClass) {
         return jdbcTemplate.queryForList(sql, aClass);
     }
 
@@ -59,6 +62,14 @@ public class JdbcExecuteSQLHelper {
     public  Integer countRows(String sql){
         return jdbcTemplate.queryForObject(sql,Integer.class);
     }
+
+    // ResultSetExtractor works like RowMapper
+    public <T> T selectMapPropByResultSetExtractor(String sql,ResultSetExtractor<T> resultSetExtractor){
+        return jdbcTemplate.query(sql,resultSetExtractor) ;
+    }
+
+    // Executing multiple queries with execute(...)
+
 
     private Map<String, String> mapRow(ResultSet resultSet) throws SQLException {
         Map<String, String> rowMap = new LinkedHashMap<>();

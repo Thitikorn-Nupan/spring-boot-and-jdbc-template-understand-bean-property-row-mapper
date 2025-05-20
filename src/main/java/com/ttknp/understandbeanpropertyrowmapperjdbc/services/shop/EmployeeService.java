@@ -1,6 +1,6 @@
 package com.ttknp.understandbeanpropertyrowmapperjdbc.services.shop;
 
-import com.ttknp.understandbeanpropertyrowmapperjdbc.entities.shop.Customer;
+import com.ttknp.understandbeanpropertyrowmapperjdbc.entities.shop.Employee;
 import com.ttknp.understandbeanpropertyrowmapperjdbc.helpers.jdbc.JdbcExecuteSQLHelper;
 import com.ttknp.understandbeanpropertyrowmapperjdbc.helpers.jdbc.NamedParamJdbcExecuteSQLHelper;
 import com.ttknp.understandbeanpropertyrowmapperjdbc.helpers.sql_commands.Commands;
@@ -17,60 +17,58 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class CustomerService implements ServiceCommon<Customer> {
+public class EmployeeService implements ServiceCommon<Employee> {
 
     private final JdbcExecuteSQLHelper jdbcExecuteSQLHelper;
     private final NamedParamJdbcExecuteSQLHelper namedParamJdbcExecuteSQLHelper;
 
     @Autowired
-    public CustomerService(JdbcExecuteSQLHelper jdbcExecuteSQLHelper, NamedParamJdbcExecuteSQLHelper namedParamJdbcExecuteSQLHelper) {
+    public EmployeeService(JdbcExecuteSQLHelper jdbcExecuteSQLHelper, NamedParamJdbcExecuteSQLHelper namedParamJdbcExecuteSQLHelper) {
         this.jdbcExecuteSQLHelper = jdbcExecuteSQLHelper;
         this.namedParamJdbcExecuteSQLHelper = namedParamJdbcExecuteSQLHelper;
     }
 
     @Override
-    public Integer save(Customer object) {
-        return namedParamJdbcExecuteSQLHelper.save(Commands.CUSTOMER_INSERT, object);
+    public Integer save(Employee object) {
+        return namedParamJdbcExecuteSQLHelper.save(Commands.EMPLOYEE_INSERT,object);
     }
 
     @Override
     public Integer countRows() {
-        return jdbcExecuteSQLHelper.countRows(Commands.CUSTOMER_SELECT_COUNT);
+        return jdbcExecuteSQLHelper.countRows(Commands.EMPLOYEE_SELECT_COUNT);
     }
 
     @Override
-    public List<Customer> readsAsList() {
-        return jdbcExecuteSQLHelper.selectAllMapPropByBeanPropertyRowMapper(Commands.CUSTOMER_SELECT_ALL, Customer.class);
+    public List<Employee> readsAsList() {
+        return jdbcExecuteSQLHelper.selectAllMapPropByBeanPropertyRowMapper(Commands.EMPLOYEE_SELECT_ALL,Employee.class);
     }
 
     @Override
-    public List<Customer> readsAsListSpecifyColumn() {
-        StringBuilder sql = new StringBuilder(Commands.CUSTOMER_SELECT_ALL_FIRSTNAME_START_WITH);
-        sql.append(" 'J%'"); // append as concast string like +
-        return jdbcExecuteSQLHelper.selectMapPropByResultSetExtractor(sql.toString(),new CustomerListResultSetExtractor());
+    public List<Employee> readsAsListSpecifyColumn() {
+        StringBuilder sql = new StringBuilder(Commands.EMPLOYEE_SELECT_ALL_FIRSTNAME_START_WITH);
+        sql.append(" 'A%'"); // append as concast string like +
+        return jdbcExecuteSQLHelper.selectMapPropByResultSetExtractor(sql.toString(),new EmployeeListResultSetExtractor());
     }
 
     @Override
-    public Iterator<Customer> readsAsIterator() {
+    public Iterator<Employee> readsAsIterator() {
         return null;
     }
 
-    private static class CustomerListResultSetExtractor implements ResultSetExtractor<List<Customer>> {
+    private static class EmployeeListResultSetExtractor implements ResultSetExtractor<List<Employee>> {
         @Override
-        public List<Customer> extractData(ResultSet rs) throws SQLException {
-            List<Customer> customers = new ArrayList<>();
+        public List<Employee> extractData(ResultSet rs) throws SQLException {
+            List<Employee> employees = new ArrayList<>();
             while (rs.next()) {
                 String uuid = rs.getString("UUID");
                 String firstname = rs.getString("firstname");
                 String lastname = rs.getString("lastname");
                 String address = rs.getString("address");
-                Customer customer = new Customer(firstname,lastname,null,address);
-                customer.setUuid(UUID.fromString(uuid));
-                customers.add(customer);
+                Employee employee = new Employee(firstname,lastname,null,address);
+                employee.setUuid(UUID.fromString(uuid));
+                employees.add(employee);
             }
-            return customers;
+            return employees;
         }
     }
-
-
 }

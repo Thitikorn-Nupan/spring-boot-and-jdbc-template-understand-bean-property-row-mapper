@@ -3,9 +3,11 @@ package com.ttknp.understandbeanpropertyrowmapperjdbc;
 import com.ttknp.understandbeanpropertyrowmapperjdbc.entities.school.Student;
 import com.ttknp.understandbeanpropertyrowmapperjdbc.entities.school.Teacher;
 import com.ttknp.understandbeanpropertyrowmapperjdbc.entities.shop.Customer;
+import com.ttknp.understandbeanpropertyrowmapperjdbc.entities.shop.Employee;
 import com.ttknp.understandbeanpropertyrowmapperjdbc.services.school.StudentService;
 import com.ttknp.understandbeanpropertyrowmapperjdbc.services.school.TeacherService;
 import com.ttknp.understandbeanpropertyrowmapperjdbc.services.shop.CustomerService;
+import com.ttknp.understandbeanpropertyrowmapperjdbc.services.shop.EmployeeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +27,17 @@ public class UnderstandBeanPropertyRowMapperJdbcApplication implements CommandLi
     private final StudentService studentService;
     private final TeacherService teacherService;
     private final CustomerService customerService;
+    private final EmployeeService employeeService;
 
     @Autowired
     public UnderstandBeanPropertyRowMapperJdbcApplication(StudentService studentService,
                                                           TeacherService teacherService,
-                                                          CustomerService customerService) {
+                                                          CustomerService customerService,
+                                                          EmployeeService employeeService) {
         this.studentService = studentService;
         this.teacherService = teacherService;
         this.customerService = customerService;
+        this.employeeService = employeeService;
     }
 
     public static void main(String[] args) {
@@ -45,6 +50,14 @@ public class UnderstandBeanPropertyRowMapperJdbcApplication implements CommandLi
         // testStudentService();
         // testTeacherService();
         testCustomerService();
+        // testEmployeeService();
+    }
+
+    private void testEmployeeService() {
+        List<Employee> employees = employeeService.readsAsListSpecifyColumn();
+        for (Employee employee : employees) {
+            log.info("{}  ", employee);
+        }
     }
 
     // format "19-09-1999"
@@ -59,7 +72,7 @@ public class UnderstandBeanPropertyRowMapperJdbcApplication implements CommandLi
         // log.info("row affected {}", customerService.save(customer));
         // log.info("total rows {}", customerService.countRows());
 
-        List<Customer> customers = customerService.readsAsList();
+        List<Customer> customers = customerService.readsAsListSpecifyColumn();
         for (Customer customer : customers) {
             log.info("{}  ", customer);
         }

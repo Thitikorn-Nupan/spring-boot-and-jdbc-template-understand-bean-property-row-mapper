@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.UUID;
 
 public class Employee extends PrimaryKey {
+
     private String firstname;
     private String lastname;
     private Date birthday;
