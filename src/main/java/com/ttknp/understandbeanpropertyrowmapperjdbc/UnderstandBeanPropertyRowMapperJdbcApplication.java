@@ -14,10 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,10 +50,10 @@ public class UnderstandBeanPropertyRowMapperJdbcApplication implements CommandLi
 
     @Override
     public void run(String... args) throws Exception {
-        // testStudentService();
+        testStudentService();
         // testTeacherService();
         // testCustomerService();
-        testEmployeeService();
+        // testEmployeeService();
     }
 
     private void testEmployeeService() {
@@ -74,7 +76,16 @@ public class UnderstandBeanPropertyRowMapperJdbcApplication implements CommandLi
         //     log.info("{}  ", customer);
         // }
 
-        log.info("multiple queries {}",customerService.deleteAndBackup("59aef92e-3d50-45d9-bdfb-39051c6df16f"));
+        // log.info("multiple queries {}",customerService.deleteAndBackup("59aef92e-3d50-45d9-bdfb-39051c6df16f"));
+
+        Customer customer = new Customer("Sack","Ryder",getBirthday("11-09-1999"),"21/96-98 Moo 6 Ekachai Road Bangbon");
+        Map<String, Object> params = new HashMap<>();
+        params.put("UUID",customer.getUuid());
+        params.put("FIRSTNAME",customer.getFirstname());
+        params.put("LASTNAME",customer.getLastname());
+        params.put("BIRTHDAY",customer.getBirthday());
+        params.put("ADDRESS",customer.getAddress());
+        log.info("row affected {}", customerService.save(params));
     }
 
     private void testTeacherService() {
@@ -108,7 +119,7 @@ public class UnderstandBeanPropertyRowMapperJdbcApplication implements CommandLi
         }*/
     }
 
-    private void testStudentService() {
+    private void testStudentService() throws ParseException {
         /*
         List<Student> students = studentService.findAll();
         for (var i = 0; i < students.size(); i++) {
@@ -150,10 +161,20 @@ public class UnderstandBeanPropertyRowMapperJdbcApplication implements CommandLi
         // log.info("row affected {}",studentService.deleteByPkOrFullName(new Student(null,"Austin Ryder",null,null)));
 
 
-        List<Student> students = studentService.findAllFilterLevel("A");
+        /*List<Student> students = studentService.findAllFilterLevel("A");
         for (Student student : students) {
             log.info("{}  ", student);
-        }
+        }*/
+
+        /*MapSqlParameterSource params = new MapSqlParameterSource();
+        // "Stone Austin",new Date(2000,12,1),"C+"
+        params.addValue("FULL_NAME","Adam Wild")
+                .addValue("BIRTHDAY","1977-01-01")
+                .addValue("LEVEL","D+");
+        log.info("primary key is {}",studentService.save(params));*/
+
+        log.info("row affected {}",studentService.save(new Student(null,"Stone Austin",getBirthday("1934-04-21"),"C+"),true));
+
     }
 
     // format "19-09-1999"

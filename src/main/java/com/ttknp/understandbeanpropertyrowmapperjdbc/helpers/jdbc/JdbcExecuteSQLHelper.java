@@ -3,10 +3,12 @@ package com.ttknp.understandbeanpropertyrowmapperjdbc.helpers.jdbc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Service;
 
 import java.sql.ResultSet;
@@ -28,9 +30,14 @@ public class JdbcExecuteSQLHelper {
     }
 
     // It's very useful for sql where result more 1 rows
-    public <T> T selectAllWhereMapPropByRowMapper(String sql, ResultSetExtractor<T> resultSetExtractor,Object ...params) {
+    public <T> T selectWhereMapPropByRowMapper(String sql, ResultSetExtractor<T> resultSetExtractor, Object ...params) {
         // it maps ? auto
         return jdbcTemplate.query(sql, resultSetExtractor,params);
+    }
+
+    // ResultSetExtractor works like RowMapper
+    public <T> T selectMapPropByResultSetExtractor(String sql,ResultSetExtractor<T> resultSetExtractor){
+        return jdbcTemplate.query(sql,resultSetExtractor) ;
     }
 
     // BeanPropertyRowMapper, this class saves you a lot of time for the mapping.
@@ -69,11 +76,6 @@ public class JdbcExecuteSQLHelper {
         return jdbcTemplate.queryForObject(sql,Integer.class);
     }
 
-    // ResultSetExtractor works like RowMapper
-    public <T> T selectMapPropByResultSetExtractor(String sql,ResultSetExtractor<T> resultSetExtractor){
-        return jdbcTemplate.query(sql,resultSetExtractor) ;
-    }
-
     // Executing multiple queries with execute(...) The method execute(String sql) returns void if a call of the method succeeds without errors.
     public Integer multipleQueries(String sql) {
         try {
@@ -83,6 +85,41 @@ public class JdbcExecuteSQLHelper {
             log.debug("Error multiple queries {}", e.getMessage());
             return -1;
         }
+    }
+
+    // SimpleJdbcInsert class simplifies writing code to execute SQL INSERT statement, i.e.
+    // you don’t have to write lengthy and tedious SQL Insert statement anymore – just specify the table name, column names and parameter values.
+    public Integer save(String schema,String table,Map<String, Object> params) {
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
+        simpleJdbcInsert.withSchemaName(schema);
+        simpleJdbcInsert.withTableName(table);
+        return simpleJdbcInsert.execute(params); // You see, you don’t have to write SQL Insert statement. And using named parameters same as the column names make the code more readable.
+    }
+
+    // If your table have auto inceremnt
+    // have to set which key is auto increment
+    // MapSqlParameterSource params for using with which tables have auto increment
+    public Number save(String schema, String table,String primaryKey, MapSqlParameterSource params) {
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
+        simpleJdbcInsert.withSchemaName(schema);
+        simpleJdbcInsert.withTableName(table);
+        simpleJdbcInsert.usingGeneratedKeyColumns(primaryKey); // ** You can use the SimpleJdbcInsert class to execute SQL Insert statement and return value of the primary column which is auto-generated.
+        return simpleJdbcInsert.executeAndReturnKey(params);
+    }
+
+    // If your table have auto inceremnt
+    // have to set which key is auto increment
+    // SimpleJdbcInsert with BeanPropertySqlParameterSource class Its auto mapping
+    public <T> Integer save(String schema, String table, String primaryKey,T object) {
+        SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
+        simpleJdbcInsert.withSchemaName(schema);
+        simpleJdbcInsert.withTableName(table);
+        simpleJdbcInsert.usingGeneratedKeyColumns(primaryKey);
+        // As you can see, you don’t even have to specify parameter names and values, as long as you provide an object that has attributes same as the column names in the database table.
+        // In the above code, the contact variable is an object of the
+        // BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(object);
+        // can reduce
+        return simpleJdbcInsert.execute(new BeanPropertySqlParameterSource(object));
     }
 
     private Map<String, String> mapRow(ResultSet resultSet) throws SQLException {

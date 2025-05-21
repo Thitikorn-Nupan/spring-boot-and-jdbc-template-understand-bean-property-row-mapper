@@ -1,12 +1,12 @@
 package com.ttknp.understandbeanpropertyrowmapperjdbc.services.school;
 
 import com.ttknp.understandbeanpropertyrowmapperjdbc.entities.school.Student;
-import com.ttknp.understandbeanpropertyrowmapperjdbc.entities.shop.Customer;
 import com.ttknp.understandbeanpropertyrowmapperjdbc.helpers.jdbc.JdbcExecuteSQLHelper;
 import com.ttknp.understandbeanpropertyrowmapperjdbc.helpers.jdbc.NamedParamJdbcExecuteSQLHelper;
 import com.ttknp.understandbeanpropertyrowmapperjdbc.helpers.sql_commands.Commands;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Service;
 
 import java.sql.ResultSet;
@@ -27,7 +27,7 @@ public class StudentService {
     }
 
     public List<Student> findAllFilterLevel(String level) {
-        return jdbcExecuteSQLHelper.selectAllWhereMapPropByRowMapper(Commands.STUDENT_SELECT_ALL_BY_LEVEL,new StudentListResultSetExtractor(),level);
+        return jdbcExecuteSQLHelper.selectWhereMapPropByRowMapper(Commands.STUDENT_SELECT_ALL_BY_LEVEL,new StudentListResultSetExtractor(),level);
     }
 
     public List<Student> findAll() {
@@ -61,6 +61,16 @@ public class StudentService {
     public Integer save(Student student) {
         int rowAffect = namedParamJdbcExecuteSQLHelper.save(Commands.STUDENT_INSERT,student);
         return rowAffect;
+    }
+
+    // Simple Jdbc Insert
+    public Number save(MapSqlParameterSource params) {
+        return jdbcExecuteSQLHelper.save("TTKNP_SCHOOL","STUDENTS","SID",params);
+    }
+
+    // Simple Jdbc Insert
+    public Integer save(Student student,Object ...whateverParamsIJustWantTheSameMethodNameAsSave) {
+        return jdbcExecuteSQLHelper.save("TTKNP_SCHOOL","STUDENTS","SID",student);
     }
 
     public Integer countLevel(Student student) {

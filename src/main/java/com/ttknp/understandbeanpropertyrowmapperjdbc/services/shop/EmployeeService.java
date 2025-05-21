@@ -11,10 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class EmployeeService implements ServiceCommon<Employee> {
@@ -31,6 +28,11 @@ public class EmployeeService implements ServiceCommon<Employee> {
     @Override
     public Integer save(Employee object) {
         return namedParamJdbcExecuteSQLHelper.save(Commands.EMPLOYEE_INSERT,object);
+    }
+
+    @Override
+    public Integer save(Map<String, Object> params) {
+        return 0;
     }
 
     @Override
@@ -52,7 +54,7 @@ public class EmployeeService implements ServiceCommon<Employee> {
 
     @Override
     public <U> List<Employee> readsAsListFilterBy(U param) {
-        return jdbcExecuteSQLHelper.selectAllWhereMapPropByRowMapper(Commands.EMPLOYEE_SELECT_ALL_BY_BIRTHDAY,new EmployeeListResultSetExtractor(),param);
+        return jdbcExecuteSQLHelper.selectWhereMapPropByRowMapper(Commands.EMPLOYEE_SELECT_ALL_BY_BIRTHDAY,new EmployeeListResultSetExtractor(),param);
     }
 
     @Override
