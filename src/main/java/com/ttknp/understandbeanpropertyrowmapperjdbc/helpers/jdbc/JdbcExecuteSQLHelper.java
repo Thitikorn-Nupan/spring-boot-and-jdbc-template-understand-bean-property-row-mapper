@@ -27,6 +27,12 @@ public class JdbcExecuteSQLHelper {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    // It's very useful for sql where result more 1 rows
+    public <T> T selectAllWhereMapPropByRowMapper(String sql, ResultSetExtractor<T> resultSetExtractor,Object ...params) {
+        // it maps ? auto
+        return jdbcTemplate.query(sql, resultSetExtractor,params);
+    }
+
     // BeanPropertyRowMapper, this class saves you a lot of time for the mapping.
     public <T> List<T> selectAllMapPropByBeanPropertyRowMapper(String sql, Class<T> aBeanClass) {
         // var rowMapper = BeanPropertyRowMapper.newInstance(aBeanClass); // auto map getter/setter
@@ -68,8 +74,16 @@ public class JdbcExecuteSQLHelper {
         return jdbcTemplate.query(sql,resultSetExtractor) ;
     }
 
-    // Executing multiple queries with execute(...)
-
+    // Executing multiple queries with execute(...) The method execute(String sql) returns void if a call of the method succeeds without errors.
+    public Integer multipleQueries(String sql) {
+        try {
+            jdbcTemplate.execute(sql);
+            return 1;
+        }catch (Exception e){
+            log.debug("Error multiple queries {}", e.getMessage());
+            return -1;
+        }
+    }
 
     private Map<String, String> mapRow(ResultSet resultSet) throws SQLException {
         Map<String, String> rowMap = new LinkedHashMap<>();

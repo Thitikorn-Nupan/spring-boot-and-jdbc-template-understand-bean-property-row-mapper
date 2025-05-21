@@ -51,8 +51,25 @@ public class EmployeeService implements ServiceCommon<Employee> {
     }
 
     @Override
+    public <U> List<Employee> readsAsListFilterBy(U param) {
+        return jdbcExecuteSQLHelper.selectAllWhereMapPropByRowMapper(Commands.EMPLOYEE_SELECT_ALL_BY_BIRTHDAY,new EmployeeListResultSetExtractor(),param);
+    }
+
+    @Override
     public Iterator<Employee> readsAsIterator() {
         return null;
+    }
+
+    @Override
+    public <U> Integer deleteAndBackup(U param) {
+        StringBuilder sql = new StringBuilder();
+        // Note insert select it can insert many rows
+        sql.append("INSERT INTO TTKNP_SHOP.EMPLOYEES_BAK ( FIRSTNAME, LASTNAME, BIRTHDAY, ADDRESS) ");
+        sql.append("SELECT FIRSTNAME, LASTNAME, BIRTHDAY, ADDRESS ");
+        sql.append("FROM TTKNP_SHOP.EMPLOYEES ");
+        sql.append("WHERE LASTNAME = '"+param+"'; ");
+        sql.append("DELETE FROM TTKNP_SHOP.EMPLOYEES WHERE LASTNAME = '"+param+"'; ");
+        return jdbcExecuteSQLHelper.multipleQueries(sql.toString());
     }
 
     private static class EmployeeListResultSetExtractor implements ResultSetExtractor<List<Employee>> {

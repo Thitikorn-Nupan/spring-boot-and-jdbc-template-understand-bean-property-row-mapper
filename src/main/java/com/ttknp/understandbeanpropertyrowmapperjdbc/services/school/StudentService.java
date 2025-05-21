@@ -1,14 +1,17 @@
 package com.ttknp.understandbeanpropertyrowmapperjdbc.services.school;
 
 import com.ttknp.understandbeanpropertyrowmapperjdbc.entities.school.Student;
+import com.ttknp.understandbeanpropertyrowmapperjdbc.entities.shop.Customer;
 import com.ttknp.understandbeanpropertyrowmapperjdbc.helpers.jdbc.JdbcExecuteSQLHelper;
 import com.ttknp.understandbeanpropertyrowmapperjdbc.helpers.jdbc.NamedParamJdbcExecuteSQLHelper;
 import com.ttknp.understandbeanpropertyrowmapperjdbc.helpers.sql_commands.Commands;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
 
 @Service
 public class StudentService {
@@ -21,6 +24,10 @@ public class StudentService {
     public StudentService(JdbcExecuteSQLHelper jdbcExecuteSQLHelper, NamedParamJdbcExecuteSQLHelper namedParamJdbcExecuteSQLHelper) {
         this.jdbcExecuteSQLHelper = jdbcExecuteSQLHelper;
         this.namedParamJdbcExecuteSQLHelper = namedParamJdbcExecuteSQLHelper;
+    }
+
+    public List<Student> findAllFilterLevel(String level) {
+        return jdbcExecuteSQLHelper.selectAllWhereMapPropByRowMapper(Commands.STUDENT_SELECT_ALL_BY_LEVEL,new StudentListResultSetExtractor(),level);
     }
 
     public List<Student> findAll() {
@@ -71,6 +78,20 @@ public class StudentService {
         return rowAffect;
     }
 
+    private static class StudentListResultSetExtractor implements ResultSetExtractor<List<Student>> {
+        @Override
+        public List<Student> extractData(ResultSet rs) throws SQLException {
+            List<Student> students = new ArrayList<>();
+            while (rs.next()) {
+                Long sid = rs.getLong("SID");
+                String fullName = rs.getString("FULL_NAME");
+                Date birthday = rs.getDate("BIRTHDAY");
+                String level = rs.getString("level");
+                students.add(new Student(sid,fullName,birthday,level));
+            }
+            return students;
+        }
+    }
 
 
 }

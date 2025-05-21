@@ -23,6 +23,7 @@ import java.util.Map;
 
 @SpringBootApplication
 public class UnderstandBeanPropertyRowMapperJdbcApplication implements CommandLineRunner {
+
     private static final Logger log = LoggerFactory.getLogger(UnderstandBeanPropertyRowMapperJdbcApplication.class);
     private final StudentService studentService;
     private final TeacherService teacherService;
@@ -49,22 +50,18 @@ public class UnderstandBeanPropertyRowMapperJdbcApplication implements CommandLi
     public void run(String... args) throws Exception {
         // testStudentService();
         // testTeacherService();
-        testCustomerService();
-        // testEmployeeService();
+        // testCustomerService();
+        testEmployeeService();
     }
 
     private void testEmployeeService() {
-        List<Employee> employees = employeeService.readsAsListSpecifyColumn();
+        /*
+        List<Employee> employees = employeeService.readsAsListFilterBy("1999-09-19");
         for (Employee employee : employees) {
             log.info("{}  ", employee);
         }
-    }
-
-    // format "19-09-1999"
-    private Date getBirthday(String birthdayAsDayMonthYear) throws ParseException {
-        //Instantiating the SimpleDateFormat class
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-        return formatter.parse(birthdayAsDayMonthYear);
+        */
+        log.info("multiple queries {}",employeeService.deleteAndBackup("Chan"));
     }
 
     private void testCustomerService() throws ParseException {
@@ -72,10 +69,12 @@ public class UnderstandBeanPropertyRowMapperJdbcApplication implements CommandLi
         // log.info("row affected {}", customerService.save(customer));
         // log.info("total rows {}", customerService.countRows());
 
-        List<Customer> customers = customerService.readsAsListSpecifyColumn();
-        for (Customer customer : customers) {
-            log.info("{}  ", customer);
-        }
+        // List<Customer> customers = customerService.readsAsListFilterBy("Jonson");
+        // for (Customer customer : customers) {
+        //     log.info("{}  ", customer);
+        // }
+
+        log.info("multiple queries {}",customerService.deleteAndBackup("59aef92e-3d50-45d9-bdfb-39051c6df16f"));
     }
 
     private void testTeacherService() {
@@ -150,5 +149,18 @@ public class UnderstandBeanPropertyRowMapperJdbcApplication implements CommandLi
         // log.info("row affected {}",studentService.deleteByPkOrFullName(new Student(4L,null,null,null)));
         // log.info("row affected {}",studentService.deleteByPkOrFullName(new Student(null,"Austin Ryder",null,null)));
 
+
+        List<Student> students = studentService.findAllFilterLevel("A");
+        for (Student student : students) {
+            log.info("{}  ", student);
+        }
+    }
+
+    // format "19-09-1999"
+    private Date getBirthday(String birthdayAsDayMonthYear) throws ParseException {
+        //Instantiating the SimpleDateFormat class
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        return formatter.parse(birthdayAsDayMonthYear);
     }
 }
+
