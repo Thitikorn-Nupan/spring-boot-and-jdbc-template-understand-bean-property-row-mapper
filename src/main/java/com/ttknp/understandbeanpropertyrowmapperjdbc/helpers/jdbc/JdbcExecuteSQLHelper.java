@@ -87,7 +87,7 @@ public class JdbcExecuteSQLHelper {
         }
     }
 
-    // SimpleJdbcInsert class simplifies writing code to execute SQL INSERT statement, i.e.
+    // *** SimpleJdbcInsert class simplifies writing code to execute SQL INSERT statement, i.e.
     // you don’t have to write lengthy and tedious SQL Insert statement anymore – just specify the table name, column names and parameter values.
     public Integer save(String schema,String table,Map<String, Object> params) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
@@ -96,8 +96,8 @@ public class JdbcExecuteSQLHelper {
         return simpleJdbcInsert.execute(params); // You see, you don’t have to write SQL Insert statement. And using named parameters same as the column names make the code more readable.
     }
 
-    // If your table have auto inceremnt
-    // have to set which key is auto increment
+    // *** SimpleJdbcInsert class
+    // If your table have auto inceremnt have to set which key is auto increment
     // MapSqlParameterSource params for using with which tables have auto increment
     public Number save(String schema, String table,String primaryKey, MapSqlParameterSource params) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
@@ -107,8 +107,8 @@ public class JdbcExecuteSQLHelper {
         return simpleJdbcInsert.executeAndReturnKey(params);
     }
 
-    // If your table have auto inceremnt
-    // have to set which key is auto increment
+    // *** SimpleJdbcInsert class
+    // If your table have auto inceremnt have to set which key is auto increment
     // SimpleJdbcInsert with BeanPropertySqlParameterSource class Its auto mapping
     public <T> Integer save(String schema, String table, String primaryKey,T object) {
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate);

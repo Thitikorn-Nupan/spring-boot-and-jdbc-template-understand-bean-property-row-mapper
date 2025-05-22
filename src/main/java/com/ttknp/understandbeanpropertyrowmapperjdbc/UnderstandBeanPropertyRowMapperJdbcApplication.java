@@ -27,12 +27,12 @@ import java.util.Map;
 public class UnderstandBeanPropertyRowMapperJdbcApplication implements CommandLineRunner {
 
     private static final Logger log = LoggerFactory.getLogger(UnderstandBeanPropertyRowMapperJdbcApplication.class);
-    private final StudentService studentService;
-    private final TeacherService teacherService;
-    private final CustomerService customerService;
-    private final EmployeeService employeeService;
+    private final StudentService studentService = null;
+    private final TeacherService teacherService = null;
+    private final CustomerService customerService = null;
+    private final EmployeeService employeeService = null;
 
-    @Autowired
+    /*@Autowired
     public UnderstandBeanPropertyRowMapperJdbcApplication(StudentService studentService,
                                                           TeacherService teacherService,
                                                           CustomerService customerService,
@@ -41,7 +41,7 @@ public class UnderstandBeanPropertyRowMapperJdbcApplication implements CommandLi
         this.teacherService = teacherService;
         this.customerService = customerService;
         this.employeeService = employeeService;
-    }
+    }*/
 
     public static void main(String[] args) {
         SpringApplication.run(UnderstandBeanPropertyRowMapperJdbcApplication.class, args);
@@ -50,7 +50,7 @@ public class UnderstandBeanPropertyRowMapperJdbcApplication implements CommandLi
 
     @Override
     public void run(String... args) throws Exception {
-        testStudentService();
+        // testStudentService();
         // testTeacherService();
         // testCustomerService();
         // testEmployeeService();

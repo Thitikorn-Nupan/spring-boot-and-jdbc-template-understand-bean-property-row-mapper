@@ -1,5 +1,6 @@
 package com.ttknp.understandbeanpropertyrowmapperjdbc.helpers.sql_commands;
 
+// Note H2 version 2.3.2
 public class Commands {
     // NamedParam Jdbc
     public static final String STUDENT_INSERT = "INSERT INTO TTKNP_SCHOOL.STUDENTS( FULL_NAME, BIRTHDAY, LEVEL) VALUES(:fullName, :birthday, :level)"; // map property of object/pojo
