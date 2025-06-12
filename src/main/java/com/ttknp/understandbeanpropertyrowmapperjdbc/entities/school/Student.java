@@ -1,10 +1,15 @@
 package com.ttknp.understandbeanpropertyrowmapperjdbc.entities.school;
 
+import org.springframework.data.relational.core.mapping.Table;
+
 import java.util.Date;
 
 
-// @Table(name = "STUDENTS",schema = "TTKNP_SCHOOL") No need if you don't use @Repository on CrudRepository
+// @Table(name = "STUDENTS",schema = "TTKNP_SCHOOL") No need if you don't use @Repository on CrudRepository,
+// But if you want to get table/schema name you can mark it
+@Table(name = "STUDENTS",schema = "TTKNP_SCHOOL")
 public class Student {
+
     private Long sid;
     private String fullName;
     private Date birthday;

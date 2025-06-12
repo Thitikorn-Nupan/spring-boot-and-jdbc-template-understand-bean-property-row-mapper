@@ -11,8 +11,11 @@ import com.ttknp.understandbeanpropertyrowmapperjdbc.services.shop.CustomerServi
 import com.ttknp.understandbeanpropertyrowmapperjdbc.services.shop.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 
@@ -43,11 +46,42 @@ public class CompoundControllers {
     }
 
     @CommonRestAPI(path = "/student")
-    public static class StudentController {
+    public static class StudentController { // this for new concept
+
         @GetMapping
         public List<Student> getStudents() {
             return CompoundControllers.studentService.findAll();
         }
+
+        @GetMapping("/reads/column")
+        public List<Object> getStudentsOnlyColumn(@RequestParam("name") String name) {
+            return CompoundControllers.studentService.findAllOnlyColumnName(name);
+        }
+
+        @GetMapping("/read/0.1") // student/read/0.1?uniqKey=SID&value=3
+        public Student getStudentByUniqKeyByPK(@RequestParam("uniqKey") String uniqKey,@RequestParam("value") Long value) {
+            return CompoundControllers.studentService.findByUniqKey(uniqKey, value);
+        }
+
+        @GetMapping("/read/0.2") // student/read/0.2?uniqKey=FULL_NAME&value=Jason%20Owner
+        public Student getStudentByUniqKeyByFullName(@RequestParam("uniqKey") String uniqKey,@RequestParam("value") String value) {
+            return CompoundControllers.studentService.findByUniqKey(uniqKey, value);
+        }
+
+        @GetMapping("/read/fullNameBy")
+        public String getStudentOnlyFullName(@RequestParam("pk") Long pk) {
+            return CompoundControllers.studentService.findFullNameBySID(pk);
+        }
+
+        @GetMapping("/read/birthdayBy")
+        public String getStudentOnlyBirthday(@RequestParam("pk") Long pk) {
+            Date birthday = CompoundControllers.studentService.findBirthdayBySID(pk);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            return simpleDateFormat.format(birthday);
+        }
+
+
+
     }
 
     @CommonRestAPI(path =  "/teacher")

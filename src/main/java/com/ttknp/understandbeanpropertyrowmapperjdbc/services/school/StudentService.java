@@ -38,6 +38,11 @@ public class StudentService {
         return jdbcExecuteSQLHelper.selectAllOnlyColumnMapPropByRowMapper(Commands.STUDENT_SELECT_ALL_ONLY_FULL_NAME,String.class);
     }
 
+    public List<Object> findAllOnlyColumnName(String name) {
+        return jdbcExecuteSQLHelper.selectAllOnlyColumnMapPropByRowMapper(Student.class,Object.class,name);
+    }
+
+
     public List<Long> findAllSid() {
         return jdbcExecuteSQLHelper.selectAllOnlyColumnMapPropByRowMapper(Commands.STUDENT_SELECT_ALL_ONLY_SID,Long.class);
     }
@@ -48,6 +53,14 @@ public class StudentService {
 
     public Student findByPrimaryKey(Long id) {
         return jdbcExecuteSQLHelper.selectOneMapPropByBeanPropertyRowMapper(Commands.STUDENT_SELECT_ONE_BY_PK,Student.class,id);
+    }
+
+    public Student findByUniqKey(String uniqKey,Long id) {
+        return jdbcExecuteSQLHelper.selectOneMapPropByBeanPropertyRowMapper(Student.class,uniqKey,id);
+    }
+
+    public Student findByUniqKey(String uniqKey,String fullName) {
+        return jdbcExecuteSQLHelper.selectOneMapPropByBeanPropertyRowMapper(Student.class,uniqKey,fullName);
     }
 
     public Map<String,String> findByFullNameAndPrimaryKey(String fullName, Long id) {
@@ -86,6 +99,14 @@ public class StudentService {
             rowAffect = jdbcExecuteSQLHelper.deleteByUniq(Commands.STUDENT_DELETE_ONE_BY_FULL_NAME,student.getFullName());
         }
         return rowAffect;
+    }
+
+    public String findFullNameBySID(Long sid) {
+        return jdbcExecuteSQLHelper.selectOneColumn(Student.class, String.class,"FULL_NAME","SID",sid);
+    }
+
+    public Date findBirthdayBySID(Long sid) {
+        return jdbcExecuteSQLHelper.selectOneColumn(Student.class, Date.class,"BIRTHDAY","SID",sid);
     }
 
     private static class StudentListResultSetExtractor implements ResultSetExtractor<List<Student>> {

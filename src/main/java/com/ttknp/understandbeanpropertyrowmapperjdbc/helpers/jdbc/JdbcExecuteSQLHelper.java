@@ -1,5 +1,6 @@
 package com.ttknp.understandbeanpropertyrowmapperjdbc.helpers.jdbc;
 
+import com.ttknp.understandbeanpropertyrowmapperjdbc.helpers.jdbc.service.UsefulJdbcService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +24,16 @@ public class JdbcExecuteSQLHelper {
 
     private static final Logger log = LoggerFactory.getLogger(JdbcExecuteSQLHelper.class);
     private final JdbcTemplate jdbcTemplate;
+    private final UsefulJdbcService usefulJdbcService;
 
     @Autowired
-    public JdbcExecuteSQLHelper(JdbcTemplate jdbcTemplate) {
+    public JdbcExecuteSQLHelper(JdbcTemplate jdbcTemplate, UsefulJdbcService usefulJdbcService) {
         this.jdbcTemplate = jdbcTemplate;
+        this.usefulJdbcService = usefulJdbcService;
     }
+
+    // 1 .add methods with dynamic script as select all , select only column
+    // 2. use it
 
     // It's very useful for sql where result more 1 rows
     public <T> T selectWhereMapPropByRowMapper(String sql, ResultSetExtractor<T> resultSetExtractor, Object ...params) {
@@ -58,8 +64,35 @@ public class JdbcExecuteSQLHelper {
         return jdbcTemplate.queryForList(sql, aClass);
     }
 
+    public <U> List<U> selectAllOnlyColumnMapPropByRowMapper(Class<?> aBeanClass,Class<U> aTypeClass,String columName) {
+        StringBuilder sql = new StringBuilder("select ")
+                .append(columName+" from ")
+                .append(usefulJdbcService.getSchemaAndTableNameOnTableAnnotation(aBeanClass));
+        return jdbcTemplate.queryForList(sql.toString(), aTypeClass);
+    }
+
+
+    // new concept dynamic sql
+    public <U> U selectOneColumn( Class<?> aBeanClass,Class<U> aTypeClass, String columName, String uniqKey, Object... params) {
+        StringBuilder sql = new StringBuilder("select ")
+                .append(columName+" from ")
+                .append(usefulJdbcService.getSchemaAndTableNameOnTableAnnotation(aBeanClass))
+                .append(" where "+uniqKey)
+                .append("= ?");
+        return jdbcTemplate.queryForObject(sql.toString(),aTypeClass,params);
+    }
+
     public <T> T selectOneMapPropByBeanPropertyRowMapper(String sql, Class<T> aBeanClass, Object... params) {
         return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper<T>(aBeanClass), params);
+    }
+
+    // new concept dynamic sql
+    public <T> T selectOneMapPropByBeanPropertyRowMapper(Class<T> aBeanClass,String uniqKey,Object... params) {
+        StringBuilder sql = new StringBuilder("select * from ")
+                .append(usefulJdbcService.getSchemaAndTableNameOnTableAnnotation(aBeanClass))
+                .append(" where "+uniqKey)
+                .append("= ?");
+        return jdbcTemplate.queryForObject(sql.toString(), new BeanPropertyRowMapper<T>(aBeanClass), params);
     }
 
     public Map<String, String> selectOneMapPropByRowMapper(String sql, Object... params) {
